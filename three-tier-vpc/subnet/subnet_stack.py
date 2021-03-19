@@ -33,6 +33,8 @@ class SubnetStack(cdk.Stack):
             # 'subnetConfiguration' specifies the "subnet groups" to create.
             # Every subnet group will have a subnet for each AZ, so this
             # configuration will create `3 groups × 3 AZs = 6` subnets.
+            ## Comment ^^ this above doesn't appear to be correct, only 2 of each
+            ## seems to be created (two AZ used) when this stack is deployed currently
             subnet_configuration=[
                 ec2.SubnetConfiguration(
                     # 'subnetType' controls Internet access, as described above.
