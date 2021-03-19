@@ -61,10 +61,10 @@ class SubnetStack(cdk.Stack):
                     cidr_mask=28,
                     name="Database",
                     subnet_type=ec2.SubnetType.ISOLATED,
-                    # 'reserved' can be used to reserve IP address space. No resources will
+                    # 'reserved' being True can be used to reserve IP address space. No resources will
                     # be created for this subnet, but the IP range will be kept available for
                     # future creation of this subnet, or even for future subdivision.
-                    reserved=True,
+                    reserved=False,
                 ),
             ],
         )
