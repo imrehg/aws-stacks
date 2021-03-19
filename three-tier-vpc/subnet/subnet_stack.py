@@ -12,7 +12,12 @@ class SubnetStack(cdk.Stack):
     def __init__(
         self, scope: cdk.Construct, construct_id: str, **kwargs
     ) -> None:
-        super().__init__(scope, construct_id, **kwargs)
+        super().__init__(
+            scope,
+            construct_id,
+            description="ThreeTierVPC experiment",
+            **kwargs
+        )
 
         # 3-Tier VPC from https://docs.aws.amazon.com/cdk/api/latest/python/aws_cdk.aws_ec2/README.html?highlight=internet%20gateway#advanced-subnet-configuration
         # Roughly along the lines of this layout:
@@ -24,10 +29,10 @@ class SubnetStack(cdk.Stack):
             # The IP space will be divided over the configured subnets.
             cidr="10.0.0.0/21",
             # 'maxAzs' configures the maximum number of availability zones to use
-            max_azs=2,
+            max_azs=3,
             # 'subnetConfiguration' specifies the "subnet groups" to create.
             # Every subnet group will have a subnet for each AZ, so this
-            # configuration will create `3 groups × 3 AZs = 9` subnets.
+            # configuration will create `3 groups × 3 AZs = 6` subnets.
             subnet_configuration=[
                 ec2.SubnetConfiguration(
                     # 'subnetType' controls Internet access, as described above.
@@ -44,13 +49,11 @@ class SubnetStack(cdk.Stack):
                     # If 'cidrMask' is left out the available address space is evenly
                     # divided across the remaining subnet groups.
                     cidr_mask=24,
-                    one_per_az=True,
                 ),
                 ec2.SubnetConfiguration(
                     cidr_mask=24,
                     name="Application",
                     subnet_type=ec2.SubnetType.PRIVATE,
-                    one_per_az=True,
                 ),
                 ec2.SubnetConfiguration(
                     cidr_mask=28,
@@ -60,7 +63,6 @@ class SubnetStack(cdk.Stack):
                     # be created for this subnet, but the IP range will be kept available for
                     # future creation of this subnet, or even for future subdivision.
                     reserved=True,
-                    one_per_az=True,
                 ),
             ],
         )
